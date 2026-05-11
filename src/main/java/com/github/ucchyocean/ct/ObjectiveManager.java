@@ -155,15 +155,16 @@ public class ObjectiveManager {
 
     private void initZeroEachTeam(Objective objective) {
 
-        for ( TeamNameSetting tns : parent.getAllTeamNames() ) {
-            // NOTE: 初期状態では0が設定されたままの項目は非表示のままになるため、
-            // いったん1を設定して項目を表示させる。
-            Score score = getScore(objective, tns);
-            score.setScore(1);
-            score.setScore(0);
+        for ( Player player : Utility.getOnlinePlayers() ) {
+            try {
+                getScore(objective, player).setScore((int)player.getHealth());
+            } catch (IllegalStateException e) {
+                // Minecraft 1.21以降の仕様変更：体力は読み取り専用のため手動設定をスキップ
+            }
         }
     }
 
+    
     private void initPersonalHealth(Objective objective) {
 
         for ( Player player : Utility.getOnlinePlayers() ) {
