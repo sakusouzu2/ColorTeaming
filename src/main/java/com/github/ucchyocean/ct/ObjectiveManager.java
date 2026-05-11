@@ -164,14 +164,17 @@ public class ObjectiveManager {
         }
     }
 
-    
     private void initPersonalHealth(Objective objective) {
 
         for ( Player player : Utility.getOnlinePlayers() ) {
-            getScore(objective, player).setScore((int)player.getHealth());
+            try {
+                getScore(objective, player).setScore((int)player.getHealth());
+            } catch (IllegalStateException e) {
+                // 1.21仕様対応：体力スコアは読み取り専用のため手動設定をスキップ
+            }
         }
     }
-
+    
     private static Score getScore(Objective objective, Player player) {
         return objective.getScore(player.getName());
     }
